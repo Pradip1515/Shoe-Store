@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Register – Pradip Bahadur Dhami</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    form {
+      max-width: 500px;
+      margin: 2em auto;
+      background: #fff;
+      padding: 1em;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.3em;
+      box-sizing: border-box;
+    }
+    .buttons {
+      margin-top: 1em;
+    }
+    .error-panel {
+      background: #fdd;
+      color: #900;
+      padding: 1em;
+      margin: 1em auto;
+      max-width: 500px;
+      border: 1px solid #900;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Product Registration</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="product_register.html">Register Product</a>
+      <a href="honesty.html">Honesty & Credits</a>
+    </nav>
+  </header>
+
+  <main>
+    <form name="signup" id="signupForm" novalidate>
+      <input type="hidden" name="FullName" id="FullName" value="Pradip Bahadur Dhami">
+      <input type="hidden" name="studentId" id="studentId" value="171106230">
+
+      <label>Product ID (8 digits):<br>
+        <input type="text" name="productId" id="productId" required>
+      </label>
+
+      <label>Product Description (min 20 characters):<br>
+        <textarea name="description" id="description" rows="4" required></textarea>
+      </label>
+
+      <label>Price (integer, 1–999):<br>
+        <input type="number" name="price" id="price" required>
+      </label>
+
+      <label>Supplier Username (min 4 characters, starts with letter):<br>
+        <input type="text" name="supplier" id="supplier" required>
+      </label>
+
+      <fieldset>
+        <legend>Supplier Status — select at least one:</legend>
+        <label><input type="checkbox" name="status" value="new"> New Supplier</label><br>
+        <label><input type="checkbox" name="status" value="contract"> Contract Signed</label><br>
+        <label><input type="checkbox" name="status" value="tested"> Quality Tested</label>
+      </fieldset>
+
+      <label>Supplier Email:<br>
+        <input type="email" name="email" id="email" required>
+      </label>
+
+      <div class="buttons">
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+      </div>
+    </form>
+
+    <div id="errorPanel" class="error-panel" style="display:none;"></div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Pradip Bahadur Dhami</p>
+  </footer>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const errors = [];
+
+      const productId = document.getElementById('productId').value.trim();
+      if (!/^[0-9]{8}$/.test(productId)) {
+        errors.push('Product ID must be exactly 8 digits.');
+      }
+
+      const description = document.getElementById('description').value.trim();
+      if (description.length < 20) {
+        errors.push('Description must be at least 20 characters.');
+      }
+
+      const price = parseInt(document.getElementById('price').value);
+      if (!(price > 0 && price < 1000 && Number.isInteger(price))) {
+        errors.push('Price must be an integer between 1 and 999.');
+      }
+
+      const supplier = document.getElementById('supplier').value.trim();
+      if (!/^[A-Za-z][A-Za-z0-9]{3,}$/.test(supplier)) {
+        errors.push('Supplier username must start with a letter and be at least 4 characters.');
+      }
+
+      const status = Array.from(document.querySelectorAll('input[name="status"]:checked'))
+                          .map(c => c.value);
+      if (status.length < 1) {
+        errors.push('At least one Supplier Status checkbox must be selected.');
+      }
+
+      const email = document.getElementById('email').value.trim();
+      if (!email) {
+        errors.push('Valid email is required.');
+      }
+
+      const errorPanel = document.getElementById('errorPanel');
+      if (errors.length) {
+        errorPanel.style.display = 'block';
+        errorPanel.innerHTML = '<strong>Please fix the following errors:</strong><ul><li>' +
+          errors.join('</li><li>') + '</li></ul>';
+        return;
+      }
+
+      // No errors → submit
+      alert('Form data is valid — submitting!');
+      this.submit();
+    });
+  </script>
+</body>
+</html>
